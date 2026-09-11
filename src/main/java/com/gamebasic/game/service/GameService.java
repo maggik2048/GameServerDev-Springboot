@@ -4,6 +4,7 @@ import com.gamebasic.game.dto.CreateRequest;
 import com.gamebasic.game.dto.GameDetailResponse;
 import com.gamebasic.game.dto.GameSummaryResponse;
 import com.gamebasic.game.dto.ProgressRequest;
+import com.gamebasic.game.dto.RenameRequest;
 import com.gamebasic.game.entity.Game;
 import com.gamebasic.game.repository.GameRepository;
 import com.gamebasic.runcard.dto.CardResponse;
@@ -86,6 +87,19 @@ public class GameService {
         );
     }
 
+    @Transactional
+    public void renameGame(Long gameId, RenameRequest request) {
+        Game game = findGame(gameId);
+        game.rename(request.getPlayerName());
+    }
+
+    @Transactional
+    public void deleteGame(Long gameId) {
+        Game game = findGame(gameId);
+        runCardRepository.deleteAllByGame(game);
+        gameRepository.delete(game);
+    }
+
     // ✅ Lv 7: 게임 목록 조회 (id 내림차순)
     @Transactional(readOnly = true)
     public List<GameSummaryResponse> getGames() {
@@ -123,7 +137,4 @@ public class GameService {
                 deck
         );
     }
-
-    // TODO (Lv 8): 플레이어 이름 변경 — 변경 감지로 수정
-    // TODO (Lv 8): 게임 삭제
 }

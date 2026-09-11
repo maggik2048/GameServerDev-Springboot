@@ -4,12 +4,15 @@ import com.gamebasic.game.dto.CreateRequest;
 import com.gamebasic.game.dto.GameDetailResponse;
 import com.gamebasic.game.dto.GameSummaryResponse;
 import com.gamebasic.game.dto.ProgressRequest;
+import com.gamebasic.game.dto.RenameRequest;
 import com.gamebasic.game.service.GameService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +40,21 @@ public class GameController {
     public ResponseEntity<GameDetailResponse> createGame(@Valid @RequestBody CreateRequest request) {
         GameDetailResponse created = gameService.createGame(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PatchMapping("/games/{gameId}")
+    public ResponseEntity<Void> renameGame(
+            @PathVariable Long gameId,
+            @Valid @RequestBody RenameRequest request
+    ) {
+        gameService.renameGame(gameId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/games/{gameId}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Long gameId) {
+        gameService.deleteGame(gameId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/games/{gameId}/progress")

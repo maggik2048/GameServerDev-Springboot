@@ -2,6 +2,7 @@ package com.gamebasic.game.controller;
 
 import com.gamebasic.game.dto.CreateRequest;
 import com.gamebasic.game.dto.GameDetailResponse;
+import com.gamebasic.game.dto.GameSummaryResponse;
 import com.gamebasic.game.dto.ProgressRequest;
 import com.gamebasic.game.service.GameService;
 import jakarta.validation.Valid;
@@ -23,8 +24,13 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping("/games")
-    public ResponseEntity<List<Object>> getGames() {
-        return ResponseEntity.ok(List.of());
+    public ResponseEntity<List<GameSummaryResponse>> getGames() {
+        return ResponseEntity.ok(gameService.getGames());
+    }
+
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity<GameDetailResponse> getGame(@PathVariable Long gameId) {
+        return ResponseEntity.ok(gameService.getGame(gameId));
     }
 
     @PostMapping("/games")
